@@ -1,0 +1,43 @@
+body {
+  margin: 10px;
+}
+label {
+  width: 300px;
+}
+
+input {
+  margin-right: 20px;
+}
+
+button {
+  margin: 10px 15px;
+  margin-left: 0;
+}
+
+#myTable {
+  border: solid 0 black;
+  border-spacing: 0;
+  width: 300px;
+}
+
+th {
+  border: 1px solid grey;
+  background-color: brown;
+  color: white;
+}
+
+td {
+  border: 1px solid grey;
+  padding: 0;
+}
+
+.btn_action {
+  margin: 0;
+  width: 100%;
+  height: 50%;
+}
+
+.td_button {
+  border: none;
+  width: 15px;
+}
