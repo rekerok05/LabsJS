@@ -1,104 +1,73 @@
-let arrStudents = [];
-let student = {
-    name: null,
-    surname: null,
-    score: null,
-    age: null,
-}
-let arrKey = Object.keys(student);
+const arrStudents = [];
+const arrKeys = ["name", "surname", "score", "age"];
+let IDTR = 0;
 
-const createElementTh = function(arrKey) {
-    for (let i = 0; i < arrKey.length; i++) {
-        th = document.createElement("th");
-        nameCols = document.createTextNode(arrKey[i]);
-        th.appendChild(nameCols);
-        tr.appendChild(th);
+const createElementCell = function(cell ,text) {
+    // cell - какая ячейка будет созаваться
+    // text - текст, который будет находится в этой ячейке
+    let tmp = document.createElement(cell);
+    tmp.appendChild(document.createTextNode(text));
+    return tmp;
+}
+
+const createTr = function name(cells, fill) {
+    // cells - какие ячейки будут создавваться в ряду
+    // fill - массив, из которого берутся данные для заполнения
+    let tr = document.createElement("tr");
+    tr.id = IDTR;
+    IDTR++;
+    for (let i = 0; i < arrKeys.length; i++) {
+        let tmp = createElementCell(cells, fill[i]);
+        // tmp - временняая ячейка, которую потом засовые в строку
+        if(cells == "td") {
+            tmp.classList.add(arrKeys[i]);
+        }
+        tr.appendChild(tmp);
     }
-}
+    return tr;
+} 
 
-const createButton = function(nameBtn) {
-    const btn = document.createElement("button");
-    btn.textContent = nameBtn;
-    btn.classList.add("btn_action");
-    return btn;
-}
-
-const addButtons = function(element) {
-    const btn1 = createButton("delete");
-    const btn2 = createButton("Add");
-    element.appendChild(btn1);
-    element.appendChild(btn2);
-    return element;
-}
-
-// const createButton = function(element) {
-//     const btn = document.createElement("button");
-//     btn.textContent = "delete";
-//     btn.classList.add("btn_delete");
-//     element.appendChild(btn);
-//     return element;
-// }
-
-const createElementTd = function(student) {
-    for (let i = 0; i < arrKey.length; i++) {
-        td = document.createElement("td");
-        nameCols = document.createTextNode(student[arrKey[i]]);
-        td.classList.add(arrKey[i]);
-        td.appendChild(nameCols);
-        tr.appendChild(td);
-    }
-    td = document.createElement("td");
-    td.classList.add("td_button");
-    const button = addButtons(td);
-    console.log("button ", button);
-    tr.appendChild(button);
-}
-
-const takeTable = function() {
-    console.log(arrKey);
+const takeHeadTable = function() {
     let body = document.querySelector("body");
     let table = document.createElement("table");
     table.id = "myTable";
-    tr = document.createElement("tr");
-    createElementTh(arrKey);
+    let tr = createTr("th", arrKeys);
     table.appendChild(tr);
     body.appendChild(table);
 }
-takeTable();
-
-const clearInput = function(inputName) {
-    document.getElementById(inputName).value = "";
-}
+takeHeadTable();
 
 const addStudent = function() {
-    studentItem = {};
-    let name = document.getElementById('name').value;
-    let surname = document.getElementById('surname').value;
-    let score = document.getElementById('score').value;
-    let age = document.getElementById('age').value;
-    studentItem.name = name;
-    studentItem.surname = surname;
-    studentItem.score = score;
-    studentItem.age = age;
+    let arrInfoOneStudent = [];
+    // arrInfoOneStudent - в этот массив будут запихиваться
+    // поля инпут
+    for (let i = 0; i < arrKeys.length; i++) {
+        arrInfoOneStudent.push(document.getElementById(arrKeys[i]).value);
+    }
+    let studentItem = {};
+    for (let i = 0; i < arrKeys.length; i++){
+        studentItem["arrKeys[i]"] = arrInfoOneStudent[i];
+    }
+    renderString(arrInfoOneStudent);
     arrStudents.push(studentItem);
-    console.log(arrStudents);
-    renderString(studentItem);
-    for (let i = 0; i < arrKey.length; i++) {
-        clearInput(arrKey[i]);
+}
+
+const clearInput = function() {
+    for (let i = 0; i < arrKeys.length; i++) {
+        document.getElementById(arrKeys[i]).value = "";
     }
 }
 
-
-const renderString = function(student) {    
+const renderString = function(arrInfoOneStudent) {    
     const myTable = document.getElementById('myTable');
-    console.log("myTable ", myTable);
-    tr = document.createElement("tr");
-    createElementTd(student);
+    let tr = createTr("td", arrInfoOneStudent);
     myTable.appendChild(tr);
+    clearInput();
 }
 
 const calculationOfScores = function() {
     const scorelFields = document.querySelectorAll(".score");
+    console.log(scorelFields);
     let sum = 0;
     for (let i = 0; i < scorelFields.length; i++) {
         sum += Number(scorelFields[i].textContent)
