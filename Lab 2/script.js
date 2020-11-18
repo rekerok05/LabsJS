@@ -1,7 +1,7 @@
 const arrStudents = [];
 const arrKeys = ["name", "surname", "score", "age"];
 const Buttons = ["delete"];
-let IDTR = 0;
+let countTr = 0;
 
 // Функции связанные с генерированием таблицы
 /////////////////////////////////////////////
@@ -9,7 +9,7 @@ const createElementButton = function(nameBtn) {
     const btn = document.createElement("button");
     btn.textContent = nameBtn;
     btn.classList.add("btn_action");
-    btn.setAttribute("onclick", "deleteStudent(" + IDTR + ")");
+    btn.setAttribute("onclick", "deleteStudent(" + countTr + ")");
     return btn;
 }
 
@@ -25,9 +25,9 @@ const createTr = function name(cells, fill) {
     // cells - какие ячейки будут создавваться в ряду
     // fill - массив, из которого берутся данные для заполнения
     let tr = document.createElement("tr");
-    tr.id = IDTR;
-    // tr.classList.add(IDTR);
-    tr.setAttribute("data-id_", IDTR);
+    tr.id = countTr;
+    // tr.classList.add(countTr);
+    // tr.setAttribute("data-id_", countTr);
     for (let i = 0; i < fill.length; i++) {
         // tmp - временняая ячейка, которую потом засоваем в строку
         let td = createElementCell(cells, fill[i]);
@@ -50,7 +50,7 @@ const createTr = function name(cells, fill) {
             tr.appendChild(td);
         }
     }
-    IDTR++;
+    countTr++;
     return tr;
 } 
 
@@ -93,7 +93,6 @@ const addStudent = function() {
     for (let i = 0; i < arrKeys.length; i++){
         studentItem[arrKeys[i]] = arrInfoOneStudent[i];
     }
-    studentItem["idSt"] = IDTR;
     renderString(arrInfoOneStudent);
     arrStudents.push(studentItem);
 }
@@ -114,8 +113,16 @@ const calculationOfScores = function() {
 /////////////////////////////////////////////
 const deleteStudent = function(numberTr) {
     // alert(numberTr);
+    // console.log("countTr ", countTr);
     let trDelete = document.getElementById(numberTr);
-    let tg = document.getElementById(numberTr - 1);
-    tg.id = "gfdg";
     trDelete.remove();
+    countTr--;
+    let allTr = document.querySelectorAll('#myTable > tr')
+    let allBtn = document.querySelectorAll('.btn_action')
+    arrStudents.splice(numberTr - 1, 1);
+    console.log(arrStudents);
+    for (let i = 0; i < allTr.length; i++) {
+        allTr[i].id = i;   
+        allBtn[i].setAttribute("onclick", "deleteStudent(" + (i + 1) + ")");
+    }
 }
