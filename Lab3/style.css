@@ -1,0 +1,51 @@
+  body {
+    margin: 10px;
+  }
+  
+  label{
+    margin-right: 20px;
+  }
+
+  input[type="text"]{
+    margin-right: 20px;
+  }
+  
+  input[type="radio"] {
+    margin-right: 5px;
+  }
+
+  button {
+    margin: 10px 15px;
+    margin-left: 0;
+  }
+  
+  #myTable {
+    border: solid 0 black;
+    border-spacing: 0;
+    text-align: center;
+  }
+  
+  th {
+    border: 1px solid grey;
+    background-color: brown;
+    color: white;
+    width: 130px;
+  }
+
+  td {
+    border: 1px solid grey;
+    padding: 0;
+    width: 130px;
+  }
+  
+  .btn_action {
+    margin: 10px;
+    width: 100%;
+    height: 50%;
+  }
+  
+  .td_button {
+    padding-left: 10px;
+    border: none;
+    width: 15px;
+  }
