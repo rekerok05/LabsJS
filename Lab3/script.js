@@ -1,97 +1,88 @@
-const arrStudent = [];
-const inputs = {
-    text: {
-        "name": "Имя",
-        "surname": "Фамилия",
-        "score": "Средний балл",
-        "age": "Возраст"
-    },
-}
-let countSt = 0;
-
-/// Инпуты
-function takeInputsText() {
-    $.each(inputs.text, function(index, value) {
-        $('.inputs').append(`<label><input type="text" id="${index}" placeholder="${value}" class="mainInputsText">${value}</label>`);
+let arrStudents = [];
+function renderHead(){
+    $("#myTable").append('<tr id="tHeader"></tr>');
+    $(".mainInputText").each(function(){
+        $("#myTable>tr").append(`<th>${$(this).attr('id')}</th>`);
     })
-    $('label').wrap('<p></p>');
 }
 
-function takeInputsRadio() {
-
+function renderTable(){
+    $(".table").append('<table id="myTable"></table>');
+    renderHead();
 }
+renderTable();
 
-function takeInputs() {
-    takeInputsText();
-    takeInputsRadio();
-}
-// takeInputs();
-////////////////////////////
-
-
-// Основные кнопки
-$('#addStudent').bind('click', function() {
-    let arrInfo = [];
-    $('.mainInputText').each(function() {
-        let tmp = $(this).val();
-        if (tmp === '') {
-            arrInfo.push('-');
-        } else {
-            arrInfo.push(tmp);
+$("#addStudent").click(function(){
+    let studentItem ={};
+    $("#myTable").append('<tr class="tStudent"></tr>');
+    $(".mainInputText").each(function(){
+        let info;
+        if ($(this).val() == '') {
+            info = "-";
         }
+        else {
+            info = $(this).val();
+        }
+        $(".tStudent:last").append(`<td>${info}</td>`)    
+        studentItem[$(this).attr("id")] = info
     })
-    $('.mainInputText').val('');
-    countSt++;
-    renderString(arrInfo);
-    let studentItem = {};
-    let tmp = 0;
-    $.each(inputs, function(index,value){
-        //console.log(inputs[index]);
-        $.each(inputs[index], function(index2,value2){
-            studentItem[inputs[index[index2]]] = arrInfo[tmp];
-            tmp++;
-        })
-    })
-    console.log(studentItem);
+    arrStudents.push(studentItem);
+    $(".tStudent:last").append(`<button id="deleteStudent">delete</button>`);
+    $(".mainInputText").val('');
 });
 
-$('#countingScore').bind('click', function() {});
-/////////////////////////////////
-
-/// Фан
-function randomColor() {
-    var colorR = Math.floor((Math.random() * 256));
-    var colorG = Math.floor((Math.random() * 256));
-    var colorB = Math.floor((Math.random() * 256));
-    return ("rgb(" + colorR + "," + colorG + "," + colorB + ")");
-};
-
-$('.mainButton').bind('click', function() {
-    $(this).css("background-color", randomColor())
+$(document).on('click','#deleteStudent',function(){
+    $(this).parent().index();
+    $(this).parent().remove()
+    arrStudents.splice($(this).parent().index(), 1);
 });
-////////////////////////////////
 
-/// Таблица
-
-function takeHeadTable(){
-    $('#myTable').append('<tr id="tHeader"></tr>');
-    $.each(inputs, function(index, value){
-        $.each(value, function(index2, value2){
-            $('#tHeader').append(`<th>${index2}</th>`)
-        })
-    })
+function renderSortTable(){
+    for (let i = 0; i < arrStudents.length; i++) {
+        $("#myTable").append('<tr class="tStudent"></tr>');
+        for (key in arrStudents[i]) {
+            let info;
+            if (arrStudents[i][key] == "-") {
+                info = "-";
+            }
+            else {
+                info = arrStudents[i][key];
+            }
+            $(".tStudent:last").append(`<td>${info}</td>`)
+        }
+        $(".tStudent:last").append(`<button id="deleteStudent">delete</button>`);
+    } 
 }
 
-function renderString(arrInfo){
-    $('#myTable').append(`<tr class="tStudent" id="st${countSt}"></tr>`);
-    $.each(arrInfo, function(index, value){
-        $(`#st${countSt}`).append(`<td>${value}</td>`);
-    })
-    $(`#st${countSt}`).append(`<button class="btn_action" id="delete">delete</>`);
-}
 
-function takeTable(){
-    $('.table').append('<table id="myTable"></table>')
-    takeHeadTable();
-}
-takeTable();
+$(document).on('click','#sortByName',function(){
+    $(".tStudent").remove();
+    for (let i = 1; i < arrStudents.length; i++) {
+        for (let j = i; j > 0; j--){
+            if (arrStudents[j].name < arrStudents[j - 1].name) {
+                temp = arrStudents[j];
+                arrStudents[j] = arrStudents[j - 1];
+                arrStudents[j - 1] = temp;
+            }
+            else
+                break; 
+        }
+    }
+    renderSortTable();
+})
+
+$(document).on('click','#sortByScore',function(){
+    $(".tStudent").remove();
+    for (let i = 1; i < arrStudents.length; i++) {
+        for (let j = i; j > 0; j--){
+            if (Number(arrStudents[j].score) > Number(arrStudents[j - 1].score)) {
+                temp = arrStudents[j];
+                arrStudents[j] = arrStudents[j - 1];
+                arrStudents[j - 1] = temp;
+            }
+            else
+                break; 
+        }
+    }
+    renderSortTable();
+})
